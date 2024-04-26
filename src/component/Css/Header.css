@@ -1,0 +1,43 @@
+.header {
+    display: flex;
+    align-items: center; /* Align items vertically in the center */
+    background-color: #333;
+    color: #fff;
+    height: 7vh;
+    width: 100%;
+    
+}
+.home2{ 
+    display: flex;
+    justify-content: end;
+}
+.home{
+    
+    background-color: #333;
+    color: #C5E0B4;
+    
+    height: 4vh;
+}
+.nav {
+    background-color: #444;
+    color: #fff;
+    text-align: center;
+    display: flex;
+    justify-content: center;   
+}
+
+.nav a {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5em 1em;
+}
+.logo {
+    width: 30px; /* Adjust the width of the logo as needed */
+    }
+h2 {
+    font-size: 1.5em; /* Adjusted font size */
+    font-weight: 500;
+    margin: 0;
+    padding: 0;
+    
+}

@@ -1,0 +1,71 @@
+/* Add these styles to your CSS file or style block in your component */
+@import "https://js.arcgis.com/4.28/@arcgis/core/assets/esri/themes/light/main.css";
+@import "@esri/calcite-components/dist/calcite/calcite.css";
+  .mapDiv {
+    height: 88vh; /* Set the desired height */
+    width: 100%;
+    position:absolute
+  }
+  .toggleBtn{
+    position: absolute;
+  top: 43vh;
+  left: 1vh;
+  background-color:#444; /* Set the background color to match the theme */
+  color: #fff; /* Set text color to white or a color that contrasts well */
+  border: none;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  }
+  
+  .toggleBtn:hover {
+    background-color: #005b91; /* Darker shade for hover effect */
+  }
+  .graphDiv{
+    display: flex;
+    position :relative;
+    background-color: #333;
+    height: 65vh;
+    width: 54vh;
+    color: aliceblue;
+    opacity: 1;
+    top: 23vh;
+    left: 1vh;
+    transition: opacity 0.9s ease-in-out;
+  }
+  .graphDiv-hidden {
+    opacity: 0;
+  }
+ 
+  
+  
+  
+  .select-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: dark;
+    color: white;
+    display: none;
+  }
+  .datepicker-section{
+    
+    top: 0;
+    left: 0; 
+    right: 0; 
+    height: 30px;
+    padding-top: 1vh;
+    padding-left: 1vh;
+  }
+  
+  .Date-ele{
+    height: 35px;
+    margin-left: 10px;
+  }
+  
