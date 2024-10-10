@@ -2,10 +2,9 @@ import  { useEffect, useRef } from 'react';
 import MapView from "@arcgis/core/views/MapView";
 import Map from "@arcgis/core/Map";
 import Draw from "@arcgis/core/views/draw/Draw";
-//import LayerList from "@arcgis/core/widgets/LayerList.js";
+
 import CreateLayerList from './utils/LayerListActions';
-//import Graphic from "@arcgis/core/Graphic";
-//import * as geometryEngine from "@arcgis/core/geometry/geometryEngine.js";
+
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import MapImageLayer from "@arcgis/core/layers/MapImageLayer.js";
 import BasemapGallery from '@arcgis/core/widgets/BasemapGallery';
@@ -16,20 +15,24 @@ import { DrawLine } from './utils/Draw';
 import "@esri/calcite-components/dist/calcite/calcite.css";
 import "./Css/MapComponent.css";
 
+import { QueryDate } from './utils/DateFormatter';
+
 import PropTypes from 'prop-types';
 
-function MapComponent({ selectedDate, selectedCounty, }) {
-  console.log("MapComponent",selectedDate, selectedCounty)
+function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
+  //console.log(activeComponent,selectedDate, selectedCounty)
   const counties = useRef(null);
   let highlightSelect = useRef(null);
   //const [droughtlayer,setDroughtLayer ] = useState(null);
   const view = useRef(null);
   const mapDiv = useRef(null);
   
+  const droughtLayer = useRef(null); // Ref for droughtLayer
+  const outlookLayer = useRef(null);
  
   ///Date Format
  
-  
+  let expression = QueryDate(selectedDate);
 
   useEffect(() => {
     
@@ -113,6 +116,31 @@ function MapComponent({ selectedDate, selectedCounty, }) {
   },[]);
     
   useEffect(() => {
+    // Clean up any existing layers before adding a new one
+    if (droughtLayer.current) {
+      view.current.map.remove(droughtLayer.current);
+    }
+    if (outlookLayer.current) {
+      view.current.map.remove(outlookLayer.current);
+    }
+
+    // Conditionally add layers based on activeComponent
+    if (activeComponent === 'Monitor') {
+      droughtLayer.current = new FeatureLayer({
+        url: 'https://tfsgis-dfe02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysisAllData/MapServer/1',
+        opacity: 0.7,
+        definitionExpression:  QueryDate(selectedDate) // Example queryDate logic
+      });
+      view.current.map.add(droughtLayer.current);
+    } else if (activeComponent === 'Outlook') {
+      outlookLayer.current = new FeatureLayer({
+        url: 'https://tfsgis02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysis/MapServer/0',
+        opacity: 0.7,
+      });
+      view.current.map.add(outlookLayer.current);
+    }
+  }, [activeComponent, selectedDate]);
+  useEffect(() => {
     //console.log('Date:', selectedDate, 'County:', selectedCounty);
 
     const query = counties.current.createQuery(); // Corrected access to the counties ref
@@ -134,7 +162,13 @@ function MapComponent({ selectedDate, selectedCounty, }) {
     };
     
     fetchData();
-  },[selectedCounty])
+  },[selectedCounty]);
+  useEffect(() => {
+    if (droughtLayer.current) {
+        droughtLayer.current.definitionExpression = expression;
+    }
+}, [selectedDate]);
+  
 
 
   return (
@@ -150,6 +184,8 @@ function MapComponent({ selectedDate, selectedCounty, }) {
 }
 MapComponent.propTypes = {
   selectedDate: PropTypes.instanceOf(Date), // Add prop type validation
-  selectedCounty: PropTypes.string // Add prop type validation
+  selectedCounty: PropTypes.string, // Add prop type validation
+  activeComponent: PropTypes.string,
+  
 };
 export default MapComponent;

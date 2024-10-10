@@ -2,7 +2,7 @@
 @import "https://js.arcgis.com/4.28/@arcgis/core/assets/esri/themes/light/main.css";
 @import "@esri/calcite-components/dist/calcite/calcite.css";
   .mapDiv {
-    height: 88vh; /* Set the desired height */
+    height: 93vh; /* Set the desired height */
     width: 100%;
     position:absolute
   }
@@ -26,21 +26,36 @@
     display: flex;
     position :relative;
     background-color: #333;
-    height: 65vh;
+    
     width: 54vh;
     color: aliceblue;
     opacity: 1;
-    top: 23vh;
+    top:50vh;
     left: 1vh;
     transition: opacity 0.9s ease-in-out;
   }
-  .graphDiv-hidden {
-    opacity: 0;
-  }
  
+ 
+  .accordion-item{
+    width: 100%;
+    background-color: #333 !important;
+    
+  }
+  .accordion-button{
+    background-color: #333 !important;
+    border:none;
+    color:#fff !important;
+    border-radius: 0px!important;
+
+  }
   
+  .accordion-header .accordion-button:not(.collapsed)::after {
+    transform: rotate(180deg); /* Rotate caret or arrow when expanded */
+  }
   
-  
+  .accordion-body.collapse {
+    transition: height 0.35s ease-in-out !important;
+  }
   .select-options {
     position: absolute;
     top: 100%;

@@ -19,15 +19,18 @@
     height: 4vh;
 }
 .nav {
-    background-color: #444;
+  
     color: #fff;
     text-align: center;
     display: flex;
     justify-content: center;   
 }
-
+.nav-left {
+    margin-left: auto;
+    color:#C5E0B4 !important;
+}
 .nav a {
-    color: #fff;
+    color: #fcffff;
     text-decoration: none;
     padding: 0.5em 1em;
 }
