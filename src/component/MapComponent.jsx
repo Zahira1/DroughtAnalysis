@@ -1,4 +1,4 @@
-import  { useEffect, useRef } from 'react';
+import  { useEffect, useRef, useState } from 'react';
 import MapView from "@arcgis/core/views/MapView";
 import Map from "@arcgis/core/Map";
 import Draw from "@arcgis/core/views/draw/Draw";
@@ -18,21 +18,28 @@ import "./Css/MapComponent.css";
 import { QueryDate } from './utils/DateFormatter';
 
 import PropTypes from 'prop-types';
+import { Container } from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import { set } from 'lodash';
 
-function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
-  //console.log(activeComponent,selectedDate, selectedCounty)
+function MapComponent({ selectedDate, selectedCounty, activeComponent, onchart,  setSelectedCountyDraw, selectedCountyDraw}) {
+  
   const counties = useRef(null);
   let highlightSelect = useRef(null);
   //const [droughtlayer,setDroughtLayer ] = useState(null);
   const view = useRef(null);
   const mapDiv = useRef(null);
-  
+  const buttonGroupDiv = useRef(null);
   const droughtLayer = useRef(null); // Ref for droughtLayer
   const outlookLayer = useRef(null);
+  const seasonalLayer = useRef(null);
+  let[ id, setId] = useState(2);
  
   ///Date Format
  
   let expression = QueryDate(selectedDate);
+  console.log(expression)
 
   useEffect(() => {
     
@@ -82,28 +89,47 @@ function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
         view: view.current,
         content: basemapGallery.container,
         expandIconClass: "esri-icon-basemap",
-      });
-      
-      
-      const layerListExp = new Expand({
-        view: view.current,
-        content: CreateLayerList(view)
         
       });
-      view.current.ui.add(layerListExp, "top-right");
+      
+      
+     
 
-
-      view.current.ui.add(bgExpand, "top-right");
+     
+      const expandWidget = new Expand({
+        view: view.current,
+        content: buttonGroupDiv.current, // Attach the React Button Group using ref
+        expandIconClass: "esri-icon-settings",
+        open: true,
+        expanded: true,
+      });
+      view.current.ui.add(expandWidget, "top-right")
+      view.current.ui.add(bgExpand, "bottom-right");
       //draw tool for the map
-      view.current.ui.add("line-button", "top-right");
+      
       const draw = new Draw({
         view: view.current,
       });
-      document.getElementById("line-button").onclick = () => {
+      document.getElementById("draw-polygon").onclick = () => {
         // creates and returns an instance of PolyLineDrawAction
-        DrawLine(draw, view);  
+        DrawLine(draw, view, setSelectedCountyDraw);  
                      
       }
+      document.getElementById('clear-selction').onclick = () => {
+        view.current.graphics.removeAll();
+        setSelectedCountyDraw([]);
+        setSelectedCounty(null);
+        if (highlightSelect.current) {
+            highlightSelect.current.remove();
+        }
+    };
+    
+            // Forest button
+            document.getElementById('forest').onclick = () => {
+              forest.visible = !forest.visible;
+              onForestToggle(forest.visible ? 'pctForestArea' : 'pctArea');
+          };
+
 
     };
     initializeMap();
@@ -117,17 +143,24 @@ function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
     
   useEffect(() => {
     // Clean up any existing layers before adding a new one
+    id = selectedDate.getFullYear()- 1998;
+      setId(id);
+      console.log(id)
     if (droughtLayer.current) {
       view.current.map.remove(droughtLayer.current);
+      
     }
     if (outlookLayer.current) {
       view.current.map.remove(outlookLayer.current);
+      view.current.map.remove(seasonalLayer.current);
+      
     }
 
     // Conditionally add layers based on activeComponent
     if (activeComponent === 'Monitor') {
+      
       droughtLayer.current = new FeatureLayer({
-        url: 'https://tfsgis-dfe02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysisAllData/MapServer/1',
+        url: `https://tfsgis02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysis/MapServer/${id}`,
         opacity: 0.7,
         definitionExpression:  QueryDate(selectedDate) // Example queryDate logic
       });
@@ -137,9 +170,25 @@ function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
         url: 'https://tfsgis02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysis/MapServer/0',
         opacity: 0.7,
       });
+      seasonalLayer.current = new FeatureLayer({
+        url:"https://tfsgis02.tfs.tamu.edu/arcgis/rest/services/DroughtAnalysis/DroughtAnalysis/MapServer/1",
+        opacity: 0.7
+
+      })
       view.current.map.add(outlookLayer.current);
+      view.current.map.add(seasonalLayer.current);
+      if (outlookLayer.current && seasonalLayer.current) {
+        if (onchart === '1') {
+          outlookLayer.current.visible = false;
+          seasonalLayer.current.visible = true;
+        } else {
+          outlookLayer.current.visible = true;
+          seasonalLayer.current.visible = false;
+        }
     }
-  }, [activeComponent, selectedDate]);
+
+    }
+  }, [activeComponent, selectedDate,onchart]);
   useEffect(() => {
     //console.log('Date:', selectedDate, 'County:', selectedCounty);
 
@@ -173,10 +222,38 @@ function MapComponent({ selectedDate, selectedCounty, activeComponent}) {
 
   return (
     <div className="map-container">
-      <div id="line-button" className="esri-widget esri-widget--buttonesri-interactive" title="Draw polyline" style ={{width: '32px', height: '30px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-      <span className="esri-icon-polygon" style={{}}></span>
-      </div>
-     
+
+
+      
+      
+     <Container ref={buttonGroupDiv}>
+      
+     <ButtonGroup vertical
+                size='sm'
+                id="draw"
+                title="Draw polyline"
+                role="group"
+                aria-label="Basic example"
+                className="button-group-responsive"
+            >
+                <Button variant="secondary" className="esri-widget tool btn-expand" id="draw-polygon">
+                    Draw<span className="esri-icon-polygon"></span>
+                </Button>
+                <Button variant="secondary" className="esri-widget tool btn-expand" id="clear-selction">
+                    Clear<span className="esri-icon-erase"></span>
+                </Button>
+                <Button variant="secondary" className="esri-widget tool btn-expand" id="report">
+                    Report<span className="esri-icon-printer"></span>
+                </Button>
+                <Button variant="secondary" className="esri-widget tool btn-expand" id="print">
+                    Print<span className="esri-icon-printer"></span>
+                </Button>
+                <Button variant="secondary" className="esri-widget tool btn-expand" id="forest">
+                    Forest<span className="esri-icon-layers"></span>
+                </Button>
+            </ButtonGroup>
+      
+     </Container>
       <div className="mapDiv" ref={mapDiv}></div>
       
     </div>
@@ -186,6 +263,7 @@ MapComponent.propTypes = {
   selectedDate: PropTypes.instanceOf(Date), // Add prop type validation
   selectedCounty: PropTypes.string, // Add prop type validation
   activeComponent: PropTypes.string,
+  onchart:PropTypes.string
   
 };
 export default MapComponent;

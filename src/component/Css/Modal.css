@@ -1,0 +1,73 @@
+/* General styling */
+body {
+    font-family: Arial, sans-serif; /* Use a clean, sans-serif font */
+}
+
+/* Modal overlay styling */
+.ReactModal__Overlay {
+    /*background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+    z-index: 1000; /* Ensure the overlay is above other content */
+}
+
+/* Modal content styling */
+.ReactModal__Content {
+    background-color: #f9f9f9; /* Light grey background */
+    padding: 20px; /* Padding inside the modal */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    max-width: 1200px; /* Max width of the modal */
+    margin: auto; /* Center the modal */
+    overflow: auto; /* Allow content to scroll if needed */
+    z-index: 1001; /* Ensure the modal is above the overlay */
+}
+
+/* Modal header */
+.modal-header {
+    font-size: 24px; /* Larger font size for header */
+    font-weight: bold; /* Bold header text */
+    margin-bottom: 20px; /* Space below the header */
+    text-align: center; /* Center the header text */
+}
+
+/* Modal section styling */
+.modal-section {
+    margin-bottom: 20px; /* Space between sections */
+}
+
+    .modal-section h3 {
+        font-size: 20px; /* Font size for section headers */
+        font-weight: bold; /* Bold section headers */
+        margin-bottom: 10px; /* Space below section headers */
+    }
+
+    .modal-section p {
+        line-height: 1.6; /* Increase line height for better readability */
+        margin-bottom: 10px; /* Space between paragraphs */
+    }
+
+/* Close button container */
+.close-btn {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    margin-top: 20px; /* Space above the button */
+}
+
+    /* Close button styling */
+    .close-btn button {
+        background-color: #007bff; /* Button background color */
+        color: #fff; /* Button text color */
+        border: none; /* Remove default border */
+        padding: 10px 20px; /* Button padding */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 16px; /* Font size */
+    }
+
+        .close-btn button:hover {
+            background-color: #0056b3; /* Button background color on hover */
+        }
+
+/* Doughnut chart styling */
+.doughnut-chart {
+    z-index: 500; /* Lower than the modal and overlay */
+}

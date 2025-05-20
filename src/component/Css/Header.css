@@ -1,46 +1,73 @@
-.header {
+/* ====== MAIN HEADER ====== */
+.clean-header {
+    background-color: #1f1f1f;
+    font-family: 'Inter', sans-serif;
+    z-index: 999;
+    height: 60px;
     display: flex;
-    align-items: center; /* Align items vertically in the center */
-    background-color: #333;
-    color: #fff;
-    height: 7vh;
-    width: 100%;
-    
-}
-.home2{ 
-    display: flex;
-    justify-content: end;
-}
-.home{
-    
-    background-color: #333;
-    color: #C5E0B4;
-    
-    height: 4vh;
-}
-.nav {
+    align-items: center;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5); /* soft bottom shadow */
+    border-bottom: 1px solid #333;
+  }
   
-    color: #fff;
-    text-align: center;
-    display: flex;
-    justify-content: center;   
-}
-.nav-left {
-    margin-left: auto;
-    color:#C5E0B4 !important;
-}
-.nav a {
-    color: #fcffff;
-    text-decoration: none;
-    padding: 0.5em 1em;
-}
-.logo {
-    width: 30px; /* Adjust the width of the logo as needed */
-    }
-h2 {
-    font-size: 1.5em; /* Adjusted font size */
-    font-weight: 500;
+  /* ====== TITLE AREA ====== */
+  .app-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    color: #ffffff;
     margin: 0;
-    padding: 0;
-    
-}
+  }
+  
+  /* ====== NAVIGATION LINKS (Monitor / Outlook / Timeline) ====== */
+  .nav-main {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-left: 2rem; /* tighten logo-to-nav gap */
+  }
+  
+  .nav-item-link {
+    font-size: 0.9rem;
+    color: #ffffff!important; /* consistent with the rest */
+    font-weight: 500;
+    text-decoration: none;
+    position: relative;
+    padding-bottom: 4px;
+    cursor: pointer;
+  }
+  
+  .nav-item-link:hover {
+    color: #9acd82; /* consistent with the rest */
+  }
+  
+  /* Green underline only for active */
+  .nav-item-link.active::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #9acd82;
+    border-radius: 1px;
+  }
+  
+  /* ====== UTILITY LINKS (About, Contact) ====== */
+  .utility-links {
+    margin-left: auto;
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.85rem;
+  }
+  
+  .utility-link {
+    color: #ffffff;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .utility-link:hover {
+    color: #ffffff;
+  }
+  
